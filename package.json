@@ -16,10 +16,14 @@
     "command-line",
     "CLI"
   ],
+  "type": "module",
   "author": "Ed Armstrong",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Thaerious/node-argument-parser/issues"
   },
-  "homepage": "https://github.com/Thaerious/node-argument-parser#readme"
+  "homepage": "https://github.com/Thaerious/node-argument-parser#readme",
+  "devDependencies": {
+    "mocha": "^9.0.0"
+  }
 }
