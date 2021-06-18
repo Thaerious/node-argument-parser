@@ -1,8 +1,11 @@
+import fs from "fs";
+
 class ParseArgs {
     constructor(options = {}) {
         this.options = options;
         this.consumers = [];
         this.aliases = {};
+        this.ignoreFlags = false;
 
         this.processed = {
             flags: {},
@@ -10,6 +13,13 @@ class ParseArgs {
         }
 
         this.setup();
+    }
+
+    loadOptions(filename = ".parseArgs"){
+        const json = fs.readFileSync(filename);
+        this.options = JSON.parse(json);
+        this.setup();
+        return this;
     }
 
     run(argv) {
@@ -26,6 +36,17 @@ class ParseArgs {
     }
 
     process(arg) {
+        if (this.ignoreFlags){
+            if (this.consumers.length > 0) this.consumeArgument(arg);
+            else this.processed.args.push(arg);
+            return;
+        }
+
+        if (arg === "--"){
+            this.ignoreFlags = true;
+            return;
+        }
+
         if (arg.startsWith("--")) this.processDoubleDash(arg, true);
         else if (arg.startsWith("  ")) this.processDoubleDash(arg, false);
         else if (arg.startsWith(" ") && arg.length === 2) this.processSingleDash(arg);
@@ -34,7 +55,8 @@ class ParseArgs {
         else this.processed.args.push(arg);
     }
 
-    processDoubleDash(arg) {
+    processDoubleDash(arg, clearConsumers) {
+        if (clearConsumers) this.consumers = [];
         const flag = arg.substr(2);
         this.processed.flags[flag] = true;
 
@@ -43,13 +65,11 @@ class ParseArgs {
         }
     }
 
-    processSingleDash(arg, clearConsumers) {
+    processSingleDash(arg) {
         const flag = arg.substr(1);
 
-        if (clearConsumers) this.consumers = [];
-
         if (this.aliases[flag]) {
-            this.process("--" + this.aliases[flag]);
+            this.process("  " + this.aliases[flag]);
         } else {
             this.processed.flags[arg.substr(1)] = true;
         }
@@ -63,18 +83,17 @@ class ParseArgs {
     }
 
     consumeArgument(arg){
-        const consumer = this.consumers.pop();
+        const consumer = this.consumers.shift();
         consumer(arg);
     }
 
     setup() {
-        for (const flag in this.options) {
-            const option = this.options[flag];
+        if (!this.options.flags) return;
+        for (const flag of this.options.flags) {
+            this.processed.flags[flag.long] = flag.default ? flag.default : false;
 
-            this.processed.flags[flag] = option.default ? option.default : false;
-
-            if (option.short) {
-                this.aliases[option.short] = flag;
+            if (flag.short) {
+                this.aliases[flag.short] = flag.long;
             }
         }
     }

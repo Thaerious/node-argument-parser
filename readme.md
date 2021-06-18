@@ -9,14 +9,16 @@ Features:
 * Permits configuration files.
 * Callbacks to intercept and process arguments.
 
-Usage:
+Usage
+-----
 
 ``` 
 import ParseArgs from "@thaerious/parseArgs"
 const parsed = new ParseArgs().run(); 
 ```
  
-Default Behaviour:
+Default Behaviour
+-----------------
 
 A flag is any argument proceeded by one or two hyphens.
 Two hyphens indicates a full word flag, while a single
@@ -81,4 +83,74 @@ console.log(parsed.args[2]);
 > /opt/bin/node.exe
 > /src/index.js
 > who@where.com
+```
+
+To include spaces in the parameter, wrap it in double quotes.  This is 
+NodeJS behaviour, not ParseArgs specific.
+```
+$ node . --name "john doe"
+
+console.log(parsed.flags.name);
+
+> john doe
+```
+
+A double-hyphen without a string attached caused all following arguments to
+be parsed as parameters not as flags, regardless of format.
+```
+$ node . --email who@where.com -- --notaflag
+
+console.log(parsed.args[2]);
+
+> --notaflag
+```
+
+Custom Behaviour
+----------------
+
+The parseArgs behaviour can be customized either by passing an description
+object with the constructor, or calling the #loadOptions method.
+The #loadOptions method will load a json file containing the options.
+By default the filename is ".parseArgs", or one can be provided.
+
+Description JSON/Object
+-----------------------
+```
+{
+    flags : [{
+            long : 'name',
+            short : 'n',
+            default : 'value',
+            desc : ''       
+            }...]
+    }
+}
+```
+
+The descriptor is an object with a 'flags' field.  The 'flags' field
+contains an array of objects, with each element defining a flag.
+This object can have the following fields:
+* long : the long form flag
+* short : single character flag
+* default : default value when flag not defined
+* desc : string to print out in help
+
+Any flag that has both a long and a short will be stored using the long
+value.  The default value is used when the flag isn't present.
+The long value for a flag is required, all other fields are optional.
+
+Multiple inline character flags that have a 'long' value can have their 
+values set after all the flags are declared.  They will be processed in
+the order they are found in the flag.
+
+```
+$ node . -epn who@where.com mypassword user
+
+console.log(parsed.flags.email);
+console.log(parsed.flags.password);
+console.log(parsed.user);
+
+> who@where.com
+> mypassword
+> user
 ```
