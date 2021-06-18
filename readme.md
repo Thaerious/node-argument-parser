@@ -7,7 +7,6 @@ command line arguments for NodeJS CLI programs.
 Features:
 * Parses single hyphen (-) and double hyphen (--) arguments.
 * Permits configuration files.
-* Callbacks to intercept and process arguments.
 
 Usage
 -----
@@ -25,11 +24,11 @@ Two hyphens indicates a full word flag, while a single
 hyphen indicated one or more single letter flags.
 
 ```
-$ node . --b --aflag -a --de  
+$ node . --b --aflag -a -de  
 ```
 Creates 5 flags {b, aflag, a, d, e}.
 
-The value of the flag defaults to boolean 'true'.
+The value of the set flag defaults to boolean 'true' when no parameters are provided.
 
 ```
 import ParseArgs from "@thaerious/parseArgs"
@@ -44,10 +43,10 @@ console.log(parsed.flags.c);
 > undefined
 ```
 
-The value of a double-hyphen flag will be the next argument
-if it's not a flag.  Otherwise, it will be boolean true.
-If true is provided on the command line, it will be a string not
-a boolean.
+A double-hyphen flag will use the next argument as it's parameters
+if the next argument is not a flag (starts with '-' or '--').
+Otherwise, it will be set to boolean true.
+If true is provided on the command line, it will be a string not a boolean.
 
 ```
 $ node . --email who@where.com --name --password name
@@ -72,7 +71,8 @@ console.log(parsed.flags.e);
 > true
 ```
 
-Unprocessed args, are put into the args field which is an array.
+An array of unprocessed arguments can be accessed through the 'args' field.
+This includes the node executable and the program filename.
 ```
 $ node . -e who@where.com
 
@@ -117,12 +117,14 @@ Description JSON/Object
 -----------------------
 ```
 {
-    flags : [{
-            long : 'name',
-            short : 'n',
-            default : 'value',
-            desc : ''       
-            }...]
+    flags : [
+            {
+            "long" : "name",
+            "short" : "n",
+            "default" : "value",
+            "desc" : ""     
+            }
+        ]
     }
 }
 ```

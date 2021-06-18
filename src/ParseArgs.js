@@ -22,7 +22,7 @@ class ParseArgs {
         return this;
     }
 
-    run(argv) {
+    run(argv = process.argv) {
         for (const arg of argv) this.process(arg);
         return this;
     }
