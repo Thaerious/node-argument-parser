@@ -7,18 +7,19 @@ class ParseArgs {
         this.aliases = {};
         this.ignoreFlags = false;
 
+        // parsed values
         this.processed = {
             flags: {},
             args: [],
         }
 
-        this.setup();
+        this.setupOptions();
     }
 
     loadOptions(filename = ".parseArgs"){
         const json = fs.readFileSync(filename);
         this.options = JSON.parse(json);
-        this.setup();
+        this.setupOptions();
         return this;
     }
 
@@ -60,7 +61,7 @@ class ParseArgs {
         const flag = arg.substr(2);
         this.processed.flags[flag] = true;
 
-        if (!this.options[flag]?.boolean) {
+        if (!this.options.dict[flag]?.boolean) {
             this.consumers.push((value) => this.processed.flags[flag] = value);
         }
     }
@@ -87,14 +88,20 @@ class ParseArgs {
         consumer(arg);
     }
 
-    setup() {
+    setupOptions() {
+        this.options.dict = {};
         if (!this.options.flags) return;
+
         for (const flag of this.options.flags) {
+            // fill the default values
             this.processed.flags[flag.long] = flag.default ? flag.default : false;
 
             if (flag.short) {
                 this.aliases[flag.short] = flag.long;
             }
+
+            // DICTionary provides an easy lookup by flag name.
+            this.options.dict[flag.long] = flag;
         }
     }
 }

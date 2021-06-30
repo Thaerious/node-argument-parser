@@ -141,4 +141,22 @@ describe(`custom behaviour`, () => {
             });
         });
     });
+
+    describe(`boolean set to true, doesn't read next argument (value is set to true when present)`, () => {
+        it(`value will be 'true' when 'boolean' flag present`, () => {
+            const argv = "node . --has-value ima-arg".split(/[ ]+/g);
+            const parsed = new ParseArgs().loadOptions().run(argv);
+            assert.strictEqual(parsed.flags['has-value'], true);
+        });
+        it(`third arg will be present (not consumed by flag)`, () => {
+            const argv = "node . --has-value ima-arg".split(/[ ]+/g);
+            const parsed = new ParseArgs().loadOptions().run(argv);
+            assert.strictEqual(parsed.args[2], "ima-arg");
+        });
+        it(`value will be 'false' when 'boolean' flag not present`, () => {
+            const argv = "node . ima-arg".split(/[ ]+/g);
+            const parsed = new ParseArgs().loadOptions().run(argv);
+            assert.strictEqual(parsed.flags['has-value'], false);
+        });
+    });
 });

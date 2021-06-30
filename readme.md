@@ -122,7 +122,8 @@ Description JSON/Object
             "long" : "name",
             "short" : "n",
             "default" : "value",
-            "desc" : ""     
+            "desc" : "",
+            "boolean" : ("true", "false")
             }
         ]
     }
@@ -136,6 +137,7 @@ This object can have the following fields:
 * short : single character flag
 * default : default value when flag not defined
 * desc : string to print out in help
+* boolean : if true will read the next non-flag argument as a value (default is false). 
 
 Any flag that has both a long and a short will be stored using the long
 value.  The default value is used when the flag isn't present.

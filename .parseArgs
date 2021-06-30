@@ -16,6 +16,11 @@
       "short" : "p",
       "default" : "super_secret",
       "description" : "user name"
+    },
+    {
+      "long" : "has-value",
+      "short" : "h",
+      "boolean" : true
     }
   ]
 }
