@@ -8,6 +8,13 @@ Features:
 * Parses single hyphen (-) and double hyphen (--) arguments.
 * Permits configuration files.
 
+NPM
+---
+
+```
+npm i @thaerious/parseargs
+```
+
 Usage
 -----
 
