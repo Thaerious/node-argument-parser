@@ -78,7 +78,7 @@ console.log(parsed.flags.e);
 > true
 ```
 
-An array of unprocessed arguments can be accessed through the 'args' field.
+An array of unconsumed arguments can be accessed through the 'args' field.
 This includes the node executable and the program filename.
 ```
 $ node . -e who@where.com
@@ -103,7 +103,7 @@ console.log(parsed.flags.name);
 ```
 
 A double-hyphen without a string attached caused all following arguments to
-be parsed as parameters not as flags, regardless of format.
+be parsed as arguments not as flags, regardless of format.
 ```
 $ node . --email who@where.com -- --notaflag
 
@@ -144,7 +144,7 @@ This object can have the following fields:
 * short : single character flag
 * default : default value when flag not defined
 * desc : string to print out in help
-* boolean : if true will read the next non-flag argument as a value (default is false). 
+* boolean : if true, this flag's value is true/false, and will not consume the next argument (default is false). 
 
 Any flag that has both a long and a short will be stored using the long
 value.  The default value is used when the flag isn't present.

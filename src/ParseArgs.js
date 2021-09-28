@@ -17,8 +17,13 @@ class ParseArgs {
     }
 
     loadOptions(filename = ".parseArgs"){
-        const json = fs.readFileSync(filename);
-        this.options = JSON.parse(json);
+        if (typeof filename == "string"){
+            const json = fs.readFileSync(filename);
+            this.options = JSON.parse(json);
+        } else {
+            this.options = filename;
+        }
+
         this.setupOptions();
         return this;
     }
@@ -100,7 +105,7 @@ class ParseArgs {
                 this.aliases[flag.short] = flag.long;
             }
 
-            // DICTionary provides an easy lookup by flag name.
+            // Dictionary provides an easy lookup by flag name.
             this.options.dict[flag.long] = flag;
         }
     }
