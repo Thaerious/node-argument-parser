@@ -19,10 +19,10 @@ describe(`test flag name and values`, () => {
             const parsed = new ParseArgs().loadOptions(options).run(argv);
             assert.notStrictEqual(parsed.flags.pack, undefined);
       });
-      it(`flag pack has correct default value`, () => {
+      it(`flag pack has correct ("a.json") default value`, () => {
             const argv = "node . --email who@where.com -n user".split(/[ ]+/g);
             const parsed = new ParseArgs().loadOptions(options).run(argv);
             assert.strictEqual(parsed.flags.pack, "a.json");
-      });      
+      });
 });
 

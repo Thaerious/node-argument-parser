@@ -16,14 +16,17 @@ class ParseArgs {
         this.setupOptions();
     }
 
-    loadOptions(filename = ".parseArgs"){
-        if (typeof filename == "string"){
-            const json = fs.readFileSync(filename);
-            this.options = JSON.parse(json);
+    /**
+     * Load options from an options object or JSON string of an 
+     * options object.
+     **/
+    loadOptions(options){
+        if (typeof options === "string"){
+            this.options = JSON.parse(options);
         } else {
-            this.options = filename;
+            this.options = options;
         }
-
+            
         this.setupOptions();
         return this;
     }
