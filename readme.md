@@ -20,9 +20,9 @@ Usage
 
 ``` 
 import ParseArgs from "@thaerious/parseArgs"
-const parsed = new ParseArgs().run(); 
+const parsed = new ParseArgs().loadOptions(options).run();
 ```
- 
+
 Default Behaviour
 -----------------
 
@@ -120,20 +120,18 @@ object with the constructor, or calling the #loadOptions method.
 The #loadOptions method will load a json file containing the options.
 By default the filename is ".parseArgs", or one can be provided.
 
-Description JSON/Object
+Options Object
 -----------------------
 ```
-{
-    flags : [
-            {
-            "long" : "name",
-            "short" : "n",
-            "default" : "value",
-            "desc" : "",
-            "boolean" : ("true", "false")
-            }
-        ]
-    }
+flags : [
+          {
+             "long" : "name",
+             "short" : "n",
+             "default" : "value",
+             "desc" : "set the name of the thing",
+             "boolean" : ("true", "false")
+        }
+    ]
 }
 ```
 
