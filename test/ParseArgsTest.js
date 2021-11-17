@@ -6,7 +6,7 @@ import FS from 'fs';
 
 let defaultOptions = FS.readFileSync("test/parseArgs.json", "utf-8");
 
-describe(`default behaviour`, () => {
+describe(`default behaviour (no options)`, () => {
     describe(`single char flags`, () => {
         it(`-a flag gives a == true`, () => {
             const argv = ["-a"];
@@ -40,28 +40,6 @@ describe(`default behaviour`, () => {
                 const argv = "node . --email who@where.com --name --password true".split(/[ ]+/g);
                 const parsed = new ParseArgs().run(argv);
                 assert.strictEqual(parsed.flags.password, 'true');
-            });
-        });
-    });
-
-    describe(`Unprocessed args, are put into the args field which is an array.`, () => {
-        describe(`node . --email who@where.com -n name password`, () => {
-            it(`n will be boolean true"`, () => {
-                const argv = "node . --email who@where.com -n name password".split(/[ ]+/g);
-                const parsed = new ParseArgs().run(argv);
-                assert.strictEqual(parsed.flags.n, true);
-            });
-
-            it(`the 3rd unprocessed arg will be 'name'`, () => {
-                const argv = "node . --email who@where.com -n name password".split(/[ ]+/g);
-                const parsed = new ParseArgs().run(argv);
-                assert.strictEqual(parsed.args[2], 'name');
-            });
-
-            it(`the 4th unprocessed arg will be 'password'`, () => {
-                const argv = "node . --email who@where.com -n name password".split(/[ ]+/g);
-                const parsed = new ParseArgs().run(argv);
-                assert.strictEqual(parsed.args[3], 'password');
             });
         });
     });
@@ -106,46 +84,7 @@ describe(`custom behaviour`, () => {
         });
     });
 
-    describe(`multiple inline character flags`, () => {
-        describe(`node . -en who@where.com user`, () => {
-            it(`email will be who@where.com`, () => {
-                const argv = "node . -en who@where.com user".split(/[ ]+/g);
-                const parsed = new ParseArgs().loadOptions(defaultOptions).run(argv);
-                assert.strictEqual(parsed.flags.email, 'who@where.com');
-            });
-            it(`name will be user`, () => {
-                const argv = "node . -en who@where.com user".split(/[ ]+/g);
-                const parsed = new ParseArgs().loadOptions(defaultOptions).run(argv);
-                assert.strictEqual(parsed.flags.name, 'user');
-            });
-        });
-        describe(`extra arguments go into the args field`, () => {
-            describe(`node . -en who@where.com user extra1 extra2`, () => {
-                it(`the 1st unprocessed arg will be 'node'`, () => {
-                    const argv = "node . -en who@where.com user extra1 extra2".split(/[ ]+/g);
-                    const parsed = new ParseArgs().loadOptions(defaultOptions).run(argv);
-                    assert.strictEqual(parsed.args[0], 'node');
-                });
-                it(`the 2nd unprocessed arg will be '.'`, () => {
-                    const argv = "node . -en who@where.com user extra1 extra2".split(/[ ]+/g);
-                    const parsed = new ParseArgs().loadOptions(defaultOptions).run(argv);
-                    assert.strictEqual(parsed.args[1], '.');
-                });
-                it(`the 3rd unprocessed arg will be 'extra1'`, () => {
-                    const argv = "node . -en who@where.com user extra1 extra2".split(/[ ]+/g);
-                    const parsed = new ParseArgs().loadOptions(defaultOptions).run(argv);
-                    assert.strictEqual(parsed.args[2], 'extra1');
-                });
-                it(`the 4th unprocessed arg will be 'extra2'`, () => {
-                    const argv = "node . -en who@where.com user extra1 extra2".split(/[ ]+/g);
-                    const parsed = new ParseArgs().loadOptions(defaultOptions).run(argv);
-                    assert.strictEqual(parsed.args[3], 'extra2');
-                });
-            });
-        });
-    });
-
-    describe(`boolean set to true, doesn't read next argument (value is set to true when present)`, () => {
+    describe(`boolean set to true, doesn't consume next argument (value is set to true when present)`, () => {
         it(`value will be 'true' when 'boolean' flag present`, () => {
             const argv = "node . --has-value ima-arg".split(/[ ]+/g);
             const parsed = new ParseArgs().loadOptions(defaultOptions).run(argv);
