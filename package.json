@@ -1,10 +1,10 @@
 {
   "name": "@thaerious/parseargs",
-  "version": "0.3.0",
+  "version": "0.5.0",
   "description": "Helps generate command line interfaces by parsing arguments.",
   "main": "src/ParseArgs.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha -b"
   },
   "repository": {
     "type": "git",
