@@ -37,4 +37,14 @@ describe(`test flag name and values`, () => {
         const parsed = new ParseArgs().loadOptions(options).run(argv);
         assert.strictEqual(parsed.args.length, 3);
     });    
+    it(`flag a_flag is undefined without a consumable value making it boolean`, () => {
+        const argv = "node . --a_flag".split(/[ ]+/g);
+        const parsed = new ParseArgs().loadOptions(options).run(argv);
+        assert.strictEqual(parsed.flags["a_flag"], true);
+    });      
+    it(`flag a_flag is undefined with a consumable value making it string`, () => {
+        const argv = "node . --a_flag value".split(/[ ]+/g);
+        const parsed = new ParseArgs().loadOptions(options).run(argv);
+        assert.strictEqual(parsed.flags["a_flag"], "value");
+    });        
 });

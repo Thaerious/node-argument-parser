@@ -40,22 +40,30 @@ class ParseArgs {
         return this;
     }
 
-    get directory(){
-        const r = {};
-        for (const flag in this.processed.count){
-            r[flag] = this.processed.flags[flag];
-        }
-        return r;
-    }
-
+    /**
+     * Return a non-reflective object with all flag key-values.
+     */
     get flags() {
         return {...this.processed.flags};
     }
 
+    /**
+     * Return a non-reflective array with all unprocessed values.
+     */    
     get args() {
         return [...this.processed.args];
     }
 
+    /**
+     * Return a non-reflective object with all flag counts.
+     */    
+    get tally(){
+        return { ...this.processed.count };
+    }
+
+    /**
+     * Return the count for a specfic flag, 0 if the flag doesn't exist.
+     */        
     count(flag){
         return this.processed.count[flag] ?? 0;
     }
