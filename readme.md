@@ -23,34 +23,28 @@ import ParseArgs from "@thaerious/parseArgs"
 const args = new ParseArgs().loadOptions(options).run();
 
 if (args.flags["flag_name"]) /* do something */ ;
-if (args.count("flag_name"] > 0) /* do something */;
+if (args.tally["flag_name"] > 0) /* do something */;
 ```
 
 Default Behaviour
 -----------------
 
-Using src/demo.js:
-
-```
-const parsed = new ParseArgs().run();
-console.log(parsed.directory);
-```
-
-Flags consume the next available value.
+Flags consume the next argument as their value.
 
 ```
 $ node src/demo.js --flag x
 { flag: 'x' }
 ```
 
-If the next value is a flag, flags get the value 'true'.
+Values are argument not preceeded by a dash, otherwise they are flags.
+Flags withough a value given the boolean value 'true'.
 
 ```
 $ node src/demo.js --flag -f x
 { flag: true, f: 'x' }
 ```
 
-Only the last of occurance of the flag counts.
+The flag will take the value of it's last occurance.
 
 ```
 $ node src/demo.js --flag a --flag b
@@ -72,7 +66,7 @@ Custom Behaviour
 ----------------
 
 * Flags with options must have a long form name.
-* The default value will be used if no value is presented.
+* The default value will be used if no value is available.
 * Setting type to boolean will prevent the flag from consuming a parameter.
 
 ```
