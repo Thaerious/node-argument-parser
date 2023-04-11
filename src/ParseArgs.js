@@ -12,6 +12,7 @@ class ParseArgs {
         }
 
         this.options = {
+            flags: [],
             dict: {},
             aliases: {}
         }
@@ -212,7 +213,7 @@ class ParseArgs {
      * Count the occurances of all flags on the argument stack.
      * Default to zero if the flag is in the options.
      */
-    doCount(argv){
+    doCount(argv) {
         this.options.flags.map(value => {
             this.processed.count[value.long] = 0;
         });
