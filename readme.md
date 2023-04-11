@@ -1,6 +1,4 @@
-Description
-===========
-
+# Description
 Simple command line argument parser for NodeJS CLI programs to maintain a consistent pattern for command line arguments.
 
 Features:
@@ -8,12 +6,11 @@ Features:
 * Permits configuration files or objects.
 * Count flag occurances.
 
-## NPM
+# Usage
 ``` bash
 npm i @thaerious/parseargs
 ```
 
-## Basic Usage
 ``` js
 import ParseArgs from "@thaerious/parseArgs"
 const args = new ParseArgs().run();
@@ -23,6 +20,8 @@ if (args.tally["flag_name"] > 0) /* do something */;
 ```
 
 ## Default Behaviour
+Default behaviour is used when no configuration has been set.
+
 Flags consume the next argument as their value.
 
 ``` bash
@@ -30,31 +29,33 @@ $ node src/demo.js --flag x
 # { flag: 'x' }
 ```
 
-Values are argument not preceeded by a dash, otherwise they are flags.
-Flags withough a value given the boolean value 'true'.
+Flags are preceeded by a single or double dash. Otherwise they are considered
+values and assigend to the preceeding flag.
+Flags without a value is assigned boolean 'true'.
 ``` bash
 $ node src/demo.js --flag -f x
 # { flag: true, f: 'x' }
 ```
 
-The flag will take the value of it's last occurance.
+The flag will take the value of it's last assignment.
 ``` bash
 $ node src/demo.js --flag a --flag b
 # { flag: 'b' }
 ```
 
-Nothing after a double dash is processed.  Use 'parsed.args' to get an array of
+Nothing after a double dash is processed.  Use the '#args' field to get an array of
 unconsumed arguments (include the node command and the filename).
 ``` bash
 $ node src/demo.js --flag a -- -b x
 # { flag: 'a' }
-# parsed.args = {/opt/node/17.0.1/bin/node, /mnt/d/project/trunk/node-argument-parser/src/demo.js, -b, x}
+# args.args = {/opt/node/17.0.1/bin/node, /mnt/d/project/trunk/node-argument-parser/src/demo.js, -b, x}
 ```
 
 
 ## Custom Behaviour
 * Flags with options must have a long form name.
 * The default value will be used if no value is available.
+* Flags of type 'string' with no default will be assigned the empty string as it's default.
 * Setting type to boolean will prevent the flag from consuming a parameter.
 
 ``` js

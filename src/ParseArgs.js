@@ -1,5 +1,3 @@
-import fs from "fs";
-
 const CHAR_FLAG_REGEX = /^-[a-zA-Z0-9]/g;
 const WORD_FLAG_REGEX = /^--[a-zA-Z0-9-_.]+/g;
 
@@ -149,7 +147,6 @@ class ParseArgs {
      **/
     applyValues(argv){
         const returnArgs = []; // return arguments
-        const terminate_op = false;
 
         for (let i = 0; i< argv.length; i++){            
             const arg = argv[i];
@@ -241,7 +238,7 @@ class ParseArgs {
             }
 
             if (flagOption.short) {
-                this.options.aliases[flagOption.short] = flagOption.long;
+                this.options.aliases[flagOption.short] = flagOption.long;                
             }
 
             // Dictionary provides an easy lookup by flag name.
