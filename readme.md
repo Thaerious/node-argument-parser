@@ -1,75 +1,63 @@
 Description
 ===========
 
-ParseArgs helps you maintain a consistent pattern for command line arguments in NodeJS CLI programs.
+Simple command line argument parser for NodeJS CLI programs to maintain a consistent pattern for command line arguments.
 
 Features:
 * Parses single hyphen (-) and double hyphen (--) arguments.
-* Permits configuration files.
+* Permits configuration files or objects.
 * Count flag occurances.
 
-NPM
----
-
-```
+## NPM
+``` bash
 npm i @thaerious/parseargs
 ```
 
-Usage
------
-
-``` 
+## Basic Usage
+``` js
 import ParseArgs from "@thaerious/parseArgs"
-const args = new ParseArgs().loadOptions(options).run();
+const args = new ParseArgs().run();
 
 if (args.flags["flag_name"]) /* do something */ ;
 if (args.tally["flag_name"] > 0) /* do something */;
 ```
 
-Default Behaviour
------------------
-
+## Default Behaviour
 Flags consume the next argument as their value.
 
-```
+``` bash
 $ node src/demo.js --flag x
-{ flag: 'x' }
+# { flag: 'x' }
 ```
 
 Values are argument not preceeded by a dash, otherwise they are flags.
 Flags withough a value given the boolean value 'true'.
-
-```
+``` bash
 $ node src/demo.js --flag -f x
-{ flag: true, f: 'x' }
+# { flag: true, f: 'x' }
 ```
 
 The flag will take the value of it's last occurance.
-
-```
+``` bash
 $ node src/demo.js --flag a --flag b
-{ flag: 'b' }
+# { flag: 'b' }
 ```
 
 Nothing after a double dash is processed.  Use 'parsed.args' to get an array of
 unconsumed arguments (include the node command and the filename).
-
-```
+``` bash
 $ node src/demo.js --flag a -- -b x
-{ flag: 'a' }
-
+# { flag: 'a' }
 # parsed.args = {/opt/node/17.0.1/bin/node, /mnt/d/project/trunk/node-argument-parser/src/demo.js, -b, x}
 ```
 
 
-Custom Behaviour
-----------------
-
+## Custom Behaviour
 * Flags with options must have a long form name.
 * The default value will be used if no value is available.
 * Setting type to boolean will prevent the flag from consuming a parameter.
 
-```
+``` js
 const options = {    
     flags: [
         {
@@ -87,4 +75,11 @@ const options = {
         }  
     ]
 };
+
+import ParseArgs from "@thaerious/parseArgs"
+const args = new ParseArgs().config(opton).run();
+
+if (args.flags["flag_name"]) /* do something */ ;
+if (args.tally["flag_name"] > 0) /* do something */;
+
 ```

@@ -27,7 +27,7 @@ const options = {
     ],
 };
 
-const parseArgs = new ParseArgs().loadOptions(options).run();
+const parseArgs = new ParseArgs().config(options).run();
 
 for (const flag in parseArgs.flags){
       console.log(`parseArgs.flags["${flag}"] = ${parseArgs.flags[flag]}`);

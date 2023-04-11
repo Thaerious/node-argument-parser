@@ -4,22 +4,24 @@ const CHAR_FLAG_REGEX = /^-[a-zA-Z0-9]/g;
 const WORD_FLAG_REGEX = /^--[a-zA-Z0-9-_.]+/g;
 
 class ParseArgs {
-    constructor(options = {flags : []}) {
-        // parsed values
+    constructor() {
         this.processed = {
             flags: {},
             count : {},
             args: [],
         }
 
-        this.loadOptions(options);
+        this.options = {
+            dict: {},
+            aliases: {}
+        }
     }
 
     /**
-     * Load options from an options object or JSON string of an 
-     * options object.
+     * Load options from an options object or JSON string of an config object.
+     * This will overwrite previous configurations.
      **/
-    loadOptions(options){
+    config(options){
         if (typeof options === "string"){
             this.options = JSON.parse(options);
         } else {
@@ -134,7 +136,7 @@ class ParseArgs {
     /**
      * Process each parameter returned from nameParameters and apply a value.
      * 
-     * Apply one of the following rules in order to all key parameters:
+     * Apply one of the following rules (in order) to all key parameters:
      * If the option-type is boolean the value is true.
      * If the option is long form and the next command line parameter is a value then use that value.
      * If the option has a default then use the default value.
@@ -145,50 +147,52 @@ class ParseArgs {
      * back on to the returned array.
      **/
     applyValues(argv){
-        const argr = []; // return arguments
+        const returnArgs = []; // return arguments
         const terminate_op = false;
 
         for (let i = 0; i< argv.length; i++){            
-            const value = argv[i];
+            const arg = argv[i];
 
             // create dummy option when none available
-            const option = this.options.dict[value.name] ?? {long : value.name};
+            const option = this.options.dict[arg.name] ?? {long : arg.name};
             
-            if (value.raw === "--"){ // early termination
+            if (arg.raw === "--"){ // early termination
                 for (let j = i+1; j < argv.length; j++){
-                    argr.push({
+                    returnArgs.push({
                         raw : argv[j].raw,
                         type : "value"
                     });
                 }
-                return argr;
+                return returnArgs;
             }
-
-            if (value.type !== 'key'){
-                argr.push(value);
+            
+            if (arg.type !== 'key'){
+                returnArgs.push(arg);
             }
             else if (option.type === "boolean"){
                 // it is a key and of type boolean so it's value is true
-                value.value = true;
-                argr.push(value);
+                arg.value = true;
+                returnArgs.push(arg);
             }
             else if (argv[i + 1] && argv[i + 1].type === 'value'){
-                // the next object is a value, use it's value for this key
-                value.value = argv[++i].raw;
-                argr.push(value);
+                // the next object is a value, use it for this key
+                arg.value = argv[++i].raw;
+                if (option.type == "string") arg.value = `${arg.value}`;
+                returnArgs.push(arg);
             }
             else if (option.default){
                 // no value provided use the default value if provided
-                value.value = option.default;
-                argr.push(value);
+                arg.value = option.default;
+                if (option.type == "string") arg.value = `${arg.value}`;
+                returnArgs.push(arg);
             }
             else{
                 // no default, use true
-                value.value = true;
-                argr.push(value);
+                arg.value = true;
+                returnArgs.push(arg);
             }
         }
-        return argr;
+        return returnArgs;
     }
 
     /**
@@ -227,16 +231,20 @@ class ParseArgs {
 
         if (!this.options.flags) return;
 
-        for (const flag of this.options.flags) {
+        for (const flagOption of this.options.flags) {
             // fill the default values
-            this.processed.flags[flag.long] = flag.default ? flag.default : false;
+            if (flagOption.type === "string") {
+                this.processed.flags[flagOption.long] = flagOption.default ? `${flagOption.default}` : "";
+            } else {
+                this.processed.flags[flagOption.long] = flagOption.default ? flagOption.default : false;
+            }
 
-            if (flag.short) {
-                this.options.aliases[flag.short] = flag.long;
+            if (flagOption.short) {
+                this.options.aliases[flagOption.short] = flagOption.long;
             }
 
             // Dictionary provides an easy lookup by flag name.
-            this.options.dict[flag.long] = flag;
+            this.options.dict[flagOption.long] = flagOption;
         }
     }
 }

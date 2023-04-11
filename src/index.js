@@ -20,7 +20,7 @@ const options = {
   };
  
 const parser = new ParseArgs();
-parser.loadOptions(options);
+parser.config(options);
 const argv = process.argv;
 const s1 = parser.createStack(argv);
 const s2 = parser.splitSingles(s1);
