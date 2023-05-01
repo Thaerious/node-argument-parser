@@ -1,86 +1,106 @@
 # Description
-Simple command line argument parser for NodeJS CLI programs to maintain a consistent pattern for command line arguments.
+This is a simple no-dependency NodeJS module for parsing command line arguments in CLI programs. It helps you build command line tools by parsing passed in command line flags. Unlike the built-in argument parser, this module does not require the programmer to declare tracked arguments in advance. Additionally, it allows for counting argument occurances.
 
 Features:
 * Parses single hyphen (-) and double hyphen (--) arguments.
-* Permits configuration files or objects.
+* Permits but does not require custom configuration.
 * Count flag occurances.
 
-# Usage
+# Installation
 ``` bash
 npm i @thaerious/parseargs
 ```
 
+# Usage
+## Default Behaviour
+Flags are prefixed by a single '-', or double '--' dash.  Command line arguments without a dash are treated as (no-flag) values.  A flag followed immediatly by a value will be assigned that value.  A flag with no following value will be assigned boolean 'true'.
+
 ``` js
 import ParseArgs from "@thaerious/parseArgs"
-const args = new ParseArgs().run();
-
-if (args.flags["flag_name"]) /* do something */ ;
-if (args.tally["flag_name"] > 0) /* do something */;
+const args = new ParseArgs();
+console.log(args.packed, args.name);
 ```
-
-## Default Behaviour
-Default behaviour is used when no configuration has been set.
-
-Flags consume the next argument as their value.
 
 ``` bash
-$ node src/demo.js --flag x
-# { flag: 'x' }
+$ ./index.js --packed --name mittens
+true, mittens
 ```
 
-Flags are preceeded by a single or double dash. Otherwise they are considered
-values and assigend to the preceeding flag.
-Flags without a value is assigned boolean 'true'.
-``` bash
-$ node src/demo.js --flag -f x
-# { flag: true, f: 'x' }
-```
-
-The flag will take the value of it's last assignment.
-``` bash
-$ node src/demo.js --flag a --flag b
-# { flag: 'b' }
-```
-
-Nothing after a double dash is processed.  Use the '#args' field to get an array of
-unconsumed arguments (include the node command and the filename).
-``` bash
-$ node src/demo.js --flag a -- -b x
-# { flag: 'a' }
-# args.args = {/opt/node/17.0.1/bin/node, /mnt/d/project/trunk/node-argument-parser/src/demo.js, -b, x}
-```
-
-
-## Custom Behaviour
-* Flags with options must have a long form name.
-* The default value will be used if no value is available.
-* Flags of type 'string' with no default will be assigned the empty string as it's default.
-* Setting type to boolean will prevent the flag from consuming a parameter.
+## Single Dash Flags
+Flags starting with a single dash can be chained.  Only the last flag in the chain will assume a value, if the value is present.
 
 ``` js
+import ParseArgs from "@thaerious/parseArgs"
+const args = new ParseArgs();
+console.log(args.a, args.b, args.c);
+```
+
+``` bash
+$ ./index.js demo/index.js -abc 3
+true true 3
+```
+
+## Custom Behaviour
+* Flags must have a long form name.
+* Flags may have a short form name.
+* The default value will be used if no value is available from the command line.
+* String flags with no default will be assigned the empty string as it's default.
+* Boolean and Count flags will not consume a command line argument.
+* Short forms for a flag will share all values with it's long form.
+
+Flags (non-boolean) can be assigned a default value.  These flags will take on the default
+value if none is provided.  Count flags have a default value of 0 if not otherwise specified; they will start counting at their default value.
+
+``` js
+import ParseArgs from "../src/ParseArgs.js";
 const options = {    
     flags: [
         {
             long: "pack",
             short: "p",
             default: "a.json",
-            desc: "retrieve scripts from directories and insert into a game file",
             type: "string",
         },
         {
             long: "exit",
             short: "x",
-            desc: "exit after executing",
             type: "boolean",
+        },
+        {
+            long: "verbose",
+            short: "v",
+            type: "count",
         }  
     ]
 };
 
 import ParseArgs from "@thaerious/parseArgs"
-const args = new ParseArgs().config(opton).run();
-
-if (args.flags["flag_name"]) /* do something */ ;
-if (args.tally["flag_name"] > 0) /* do something */;
-
+const args = new ParseArgs(options);
+console.log(args.pack, args.exit, args.verbose);
 ```
+
+```bash
+$ /index.js
+a.json false 0
+```
+
+### Default Flags (no type)
+* The default value of default flags is boolean false.
+* Default flags that are present and did not consume an argument will be assigned the value boolean 'true', unless the default otherwise specified.
+* Default flags that are present and consumed an argument will be assigned the consumed arguments value.
+
+### String Flags
+* The default value of string flags is a zero-length string unless otherwise specified.
+* String flags that are present and did not consume an argument will be assigned their default value.
+* They consume the next argument if available and use that for their value.
+
+### Boolean Flags
+* The value of boolean flags is true if they are present, otherwise false.
+* Boolean flags do not have default values.
+* They do not consume arguments.
+
+### Count Flags
+* The value of count flags is the number of times the flag appears.
+* If not defined the default value is 0.
+* Counting start at the devault value.
+* They do not consume arguments.

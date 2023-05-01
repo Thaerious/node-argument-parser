@@ -13,38 +13,58 @@ const options = {
             long: "do_action",
             type: "boolean",
         },
+        {
+            long: "not_found",
+            type: "boolean",
+        },        
     ],
 };
 
-describe(`test flag name and values`, () => {
-    it(`flag pack will exist even though it's present`, () => {
-        const argv = "node . --email who@where.com -n user".split(/[ ]+/g);
-        const parsed = new ParseArgs().config(options).run(argv);
-        assert.notStrictEqual(parsed.flags.pack, undefined);
+describe(`Testing parse args behaviours`, () => {
+
+    describe(`flags included in options will have a default value when not present in args`, function () {
+        it("value is defined", () => {
+            const argv = "node . --email who@where.com -n user".split(/[ ]+/g);
+            const parsed = new ParseArgs(options, argv);
+            assert.notStrictEqual(parsed.pack, undefined);
+        });
+        it(`value is equal to the default`, () => {
+            const argv = "node . --email who@where.com -n user".split(/[ ]+/g);
+            const parsed = new ParseArgs(options, argv);
+            assert.strictEqual(parsed.pack, "a.json");
+        });
     });
-    it(`flag pack has correct ("a.json") default value`, () => {
-        const argv = "node . --email who@where.com -n user".split(/[ ]+/g);
-        const parsed = new ParseArgs().config(options).run(argv);
-        assert.strictEqual(parsed.flags.pack, "a.json");
+
+    describe(`boolean flags`, function () {
+        it(`boolean flags do not consume arguments`, () => {
+            const argv = "node . --do_action value".split(/[ ]+/g);
+            const parsed = new ParseArgs(options, argv);
+            assert.strictEqual(parsed.$.args.length, 3);
+        });        
+        it(`boolean flags are true when present in args`, () => {
+            const argv = "node . --do_action value".split(/[ ]+/g);
+            const parsed = new ParseArgs(options, argv);
+            assert.strictEqual(parsed["do_action"], true);
+        });
+        it(`boolean flags are false when not present in args`, () => {
+            const argv = "node . --do_action value".split(/[ ]+/g);
+            const parsed = new ParseArgs(options, argv);
+            assert.strictEqual(parsed["not_found"], false);
+        });
     });
-    it(`flag do_action, will be true, because it's boolean`, () => {
-        const argv = "node . --do_action value".split(/[ ]+/g);
-        const parsed = new ParseArgs().config(options).run(argv);
-        assert.strictEqual(parsed.flags["do_action"], true);
+
+    describe(`undefined flags`, function () {
+        it(`undefined flags without a consumable are assigned the value 'true'`, () => {
+            const argv = "node . --a_flag".split(/[ ]+/g);
+            const parsed = new ParseArgs(options, argv);
+            assert.strictEqual(parsed["a_flag"], true);
+        });
+        it(`undefined flags with a consumable are assigned a string value`, () => {
+            const argv = "node . --a_flag value".split(/[ ]+/g);
+            const parsed = new ParseArgs(options, argv);
+            assert.strictEqual(parsed["a_flag"], "value");
+            assert.strictEqual(typeof parsed["a_flag"], "string");
+        });
     });
-    it(`flag do_action won't consume a parameter, because it's boolean`, () => {
-        const argv = "node . --do_action value".split(/[ ]+/g);
-        const parsed = new ParseArgs().config(options).run(argv);
-        assert.strictEqual(parsed.args.length, 3);
-    });    
-    it(`flag a_flag is undefined without a consumable value making it boolean`, () => {
-        const argv = "node . --a_flag".split(/[ ]+/g);
-        const parsed = new ParseArgs().config(options).run(argv);
-        assert.strictEqual(parsed.flags["a_flag"], true);
-    });      
-    it(`flag a_flag is undefined with a consumable value making it string`, () => {
-        const argv = "node . --a_flag value".split(/[ ]+/g);
-        const parsed = new ParseArgs().config(options).run(argv);
-        assert.strictEqual(parsed.flags["a_flag"], "value");
-    });        
 });
+

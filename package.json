@@ -1,10 +1,10 @@
 {
   "name": "@thaerious/parseargs",
-  "version": "0.7.0",
+  "version": "1.0.0",
   "description": "Helps generate command line interfaces by parsing arguments.",
   "main": "src/ParseArgs.js",
   "scripts": {
-    "test": "mocha -b"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -14,7 +14,11 @@
     "argument",
     "parser",
     "command-line",
-    "CLI"
+    "CLI",
+    "args",
+    "args-parser",
+    "flags",
+    "flag-parser"
   ],
   "type": "module",
   "author": "Ed Armstrong",

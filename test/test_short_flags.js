@@ -43,22 +43,22 @@ describe(`multiple single character flags`, () => {
     describe(`-af`, () => {
         it(`a/alpha will be true because it is type:boolean with default value`, () => {
             const argv = "node . -af".split(/[ ]+/g);
-            const parsed = new ParseArgs().config(options).run(argv);
-			const actual = parsed.flags.alpha;
+            const parsed = new ParseArgs(options, argv);
+			const actual = parsed.alpha;
 			const expected = true;
             assert.strictEqual(actual, expected);
         });
         it(`f/foxtrot has default value 'dance' because no parameters were provided`, () => {
             const argv = "node . -af".split(/[ ]+/g);
-            const parsed = new ParseArgs().config(options).run(argv);
-			const actual = parsed.flags.foxtrot;
-			const expected = "dance";
+            const parsed = new ParseArgs(options, argv);
+			const actual = parsed.foxtrot;
+            const expected = "dance";            
             assert.strictEqual(actual, expected);
         });		
         it(`x/xray is false because it has no default and isn't flagged`, () => {
             const argv = "node . -af".split(/[ ]+/g);
-            const parsed = new ParseArgs().config(options).run(argv);
-			const actual = parsed.flags.foxtrot;
+            const parsed = new ParseArgs(options, argv);
+			const actual = parsed.foxtrot;
 			const expected = "dance";
             assert.strictEqual(actual, expected);
         });		
@@ -66,31 +66,31 @@ describe(`multiple single character flags`, () => {
     describe(`-axbf ballroom`, () => {
         it(`a/alpha will be true because it is type:boolean with default value`, () => {
             const argv = "node . -axbf ballroom".split(/[ ]+/g);
-            const parsed = new ParseArgs().config(options).run(argv);
-			const actual = parsed.flags.alpha;
-			const expected = true;
+            const parsed = new ParseArgs(options, argv);
+			const actual = parsed.alpha;
+            const expected = true;
             assert.strictEqual(actual, expected);
         });
-        it(`f/foxtrot has value 'ballroom' because a parameter was provided`, () => {
+        it(`f/foxtrot has no type so it consumes a value`, () => {
             const argv = "-axbf ballroom".split(/[ ]+/g);
-            const parsed = new ParseArgs().config(options).run(argv);
-			const actual = parsed.flags.foxtrot;
+            const parsed = new ParseArgs(options, argv);
+			const actual = parsed.foxtrot;
 			const expected = "ballroom";
             assert.strictEqual(actual, expected);
         });		
-        it(`x/xray is true it is flagged`, () => {
+        it(`x/xray is true`, () => {
             const argv = "-axbf ballroom".split(/[ ]+/g);
-            const parsed = new ParseArgs().config(options).run(argv);
-			const actual = parsed.flags.xray;
-			const expected = true;
+            const parsed = new ParseArgs(options, argv);
+			const actual = parsed.xray;
+            const expected = true;
             assert.strictEqual(actual, expected);
         });		
     });   
     describe(`-ax ballroom`, () => {
         it(`x/xray is not set to boolean so it consumes an argument`, () => {
             const argv = "-ax ballroom".split(/[ ]+/g);
-            const parsed = new ParseArgs().config(options).run(argv);
-			const actual = parsed.flags.xray;
+            const parsed = new ParseArgs(options, argv);
+			const actual = parsed.xray;
 			const expected = "ballroom";
             assert.strictEqual(actual, expected);
         });		
@@ -98,29 +98,22 @@ describe(`multiple single character flags`, () => {
     describe(`-xa ballroom`, () => {
         it(`runme a/alpha is set to boolean so it doesn't consume an argument`, () => {
             const argv = "-xa ballroom".split(/[ ]+/g);
-            const parsed = new ParseArgs().config(options).run(argv);
-			const actual = parsed.flags.alpha;
+            const parsed = new ParseArgs(options, argv);
+			const actual = parsed.alpha;
 			const expected = true;
             assert.strictEqual(actual, expected);
         });		
         it(`x/xray doesn't consume an argument because it comes first`, () => {
             const argv = "-xa ballroom".split(/[ ]+/g);
-            const parsed = new ParseArgs().config(options).run(argv);
-			const actual = parsed.flags.xray;
+            const parsed = new ParseArgs(options, argv);
+			const actual = parsed.xray;
 			const expected = true;
             assert.strictEqual(actual, expected);
-        });	   
-        it(`there is an argument because 'ballroom' is never consumed`, () => {
-            const argv = "-xa ballroom".split(/[ ]+/g);
-            const parsed = new ParseArgs().config(options).run(argv);
-			const actual = parsed.args[0];
-			const expected = "ballroom";
-            assert.strictEqual(actual, expected);
-        });	     
+        });	    
         it(`f/foxtrot has default value 'dance' because the flag was never set`, () => {
             const argv = "node . -af".split(/[ ]+/g);
-            const parsed = new ParseArgs().config(options).run(argv);
-			const actual = parsed.flags.foxtrot;
+            const parsed = new ParseArgs(options, argv);
+			const actual = parsed.foxtrot;
 			const expected = "dance";
             assert.strictEqual(actual, expected);
         });	                

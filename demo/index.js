@@ -1,34 +1,25 @@
 import ParseArgs from "../src/ParseArgs.js";
 
-const options = {
+const options = {    
     flags: [
         {
-            long: "email",
-            short: "e",
-            default: "",
-            description: "user email",
-        },
-        {
-            long: "name",
-            short: "n",
-            description: "user name",
-        },
-        {
-            long: "password",
+            long: "pack",
             short: "p",
-            default: "super_secret",
-            description: "user name",
+            default: "a.json",
+            type: "string",
         },
         {
-            long: "has-value",
-            short: "h",
-            boolean: true,
+            long: "exit",
+            short: "x",
+            type: "boolean",
         },
-    ],
+        {
+            long: "verbose",
+            short: "v",
+            type: "count",
+        }  
+    ]
 };
 
-const parseArgs = new ParseArgs().config(options).run();
-
-for (const flag in parseArgs.flags){
-      console.log(`parseArgs.flags["${flag}"] = ${parseArgs.flags[flag]}`);
-}
+const args = new ParseArgs(options);
+console.log(args.pack, args.exit, args.verbose);
