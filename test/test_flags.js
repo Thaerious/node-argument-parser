@@ -47,9 +47,9 @@ describe(`Tast Flags.js`, function () {
         });           
     });
 
-    describe(`flag without type default value`, function () {
-        it(`has value 'false'`, function () {
-            assert.strictEqual(false, this.flags.imaflag.value);
+    describe(`flag without type has an udefined default value`, function () {
+        it(`has value 'undefined'`, function () {
+            assert.strictEqual(undefined, this.flags.imaflag.value);
         });
     });    
     
@@ -64,8 +64,8 @@ describe(`Tast Flags.js`, function () {
             assert.ok(this.flags.unknown);
         });
         
-        it(`has default value of false`, function () {
-            assert.strictEqual(this.flags.unknown.value, false);
+        it(`has default value of undefined`, function () {
+            assert.strictEqual(this.flags.unknown.value, undefined);
         });           
     });    
 }); 
