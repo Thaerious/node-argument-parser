@@ -8,9 +8,9 @@ const handler = {
                 options: {
                     long: prop,
                     type: "default",
-                    default: false
+                    default: undefined
                 },
-                value: false,
+                value: undefined,
                 rule_applied: 0
             }
         }
@@ -28,7 +28,8 @@ class Flags {
 
             if (option.type === "string") option.default = `${option.default}`;
             if (option.type === "boolean") option.default = false;           
-            if (option.type === undefined) option.default = option.default ?? false;
+            if (option.type === "default") option.default = option.default ?? undefined;
+            if (option.type === undefined) option.default = option.default ?? undefined;
 
             const flag = {
                 options: option,
