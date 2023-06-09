@@ -13,18 +13,20 @@ npm i @thaerious/parseargs
 
 # Usage
 ## Default Behaviour
-Flags are prefixed by a single '-', or double '--' dash.  Command line arguments without a dash are treated as (no-flag) values.  A flag followed immediatly by a value will be assigned that value.  A flag with no following value will be assigned boolean 'true'.
+Flags are prefixed by a single '-', or double '--' dash.  Command line arguments without a dash are treated as (no-flag) values.  A flag followed immediately by a value will be assigned that value.  A flag with no following value will be assigned boolean 'true'.
 
 ``` js
 import ParseArgs from "@thaerious/parseArgs"
 const args = new ParseArgs();
-console.log(args.packed, args.name);
+console.log(args.packed, args.name, args.default);
 ```
 
 ``` bash
 $ ./index.js --packed --name mittens
 true, mittens
 ```
+
+The flag 'packed' has the value of true because it was not followed by a value.  The flag 'name' has the value 'mittens' because it immediately follows the flag.
 
 ## Single Dash Flags
 Flags starting with a single dash can be chained.  Only the last flag in the chain will assume a value, if the value is present.
@@ -38,6 +40,20 @@ console.log(args.a, args.b, args.c);
 ``` bash
 $ ./index.js demo/index.js -abc 3
 true true 3
+```
+
+## Unknown Flags
+Flags without a configuration and not present on the command line will have the value 'undefined'.
+
+``` js
+import ParseArgs from "@thaerious/parseArgs"
+const args = new ParseArgs();
+console.log(args.a);
+```
+
+``` bash
+$ ./index.js demo/index.js
+undefined
 ```
 
 ## Custom Behaviour
