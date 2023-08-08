@@ -1,3 +1,7 @@
 import ParseArgs from "../src/ParseArgs.js";
-const args = new ParseArgs()
-console.log(args.alpha, args.beta, args.a, args.b);
+const parseArgs = new ParseArgs()
+
+console.log(parseArgs.alpha, parseArgs.a);
+
+// console.log(parseArgs);
+// console.log(parseArgs.$.flags.alpha);
