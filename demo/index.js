@@ -22,5 +22,4 @@ const options = {
 };
 
 const args = new ParseArgs(options);
-// console.log(args.pack, args.exit, args.verbose);
-console.log(args.packed, args.name, args.default);
+console.log(args.pack, args.exit, args.verbose);

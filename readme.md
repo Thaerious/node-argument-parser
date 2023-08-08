@@ -6,62 +6,35 @@ Features:
 * Permits but does not require custom configuration.
 * Count flag occurances.
 
-# Installation
+## Installation
 ``` bash
 npm i @thaerious/parseargs
 ```
 
-# Usage
 ## Default Behaviour
-Flags are prefixed by a single '-', or double '--' dash.  Command line arguments without a dash are treated as (no-flag) values.  A flag followed immediately by a value will be assigned that value.  A flag with no following value will be assigned boolean 'true'.
-
-``` js
-import ParseArgs from "@thaerious/parseArgs"
-const args = new ParseArgs();
-console.log(args.packed, args.name, args.default);
+```
+import ParseArgs from "../src/ParseArgs.js";
+const args = new ParseArgs()
 ```
 
-``` bash
-$ ./index.js --packed --name mittens
-true, mittens
-```
+Command line arguments which are prefixed by a single '-', or double '--' dash are considered 'flags'.  All other arguments are considered 'parameters'.  
 
-The flag 'packed' has the value of true because it was not followed by a value.  The flag 'name' has the value 'mittens' because it immediately follows the flag.
+* A flag followed immediately by a parameter will be assigned that parameters string value.  
+* A flag with no parameter will be assigned boolean 'true'.
+* Flags not present (unknown) on the command line have the value 'undefined'.
+* Single dash flags consist of a single character and can be chained.
 
-## Single Dash Flags
-Flags starting with a single dash can be chained.  Only the last flag in the chain will assume a value, if the value is present.
+_see /demo/default.js for examples_
 
-``` js
-import ParseArgs from "@thaerious/parseArgs"
-const args = new ParseArgs();
-console.log(args.a, args.b, args.c);
-```
-
-``` bash
-$ ./index.js demo/index.js -abc 3
-true true 3
-```
-
-## Unknown Flags
-Flags without a configuration and not present on the command line will have the value 'undefined'.
-
-``` js
-import ParseArgs from "@thaerious/parseArgs"
-const args = new ParseArgs();
-console.log(args.a);
-```
-
-``` bash
-$ ./index.js demo/index.js
-undefined
-```
+### Single Dash Flags
+Flags starting with a single dash can be chained.  Single dash flags consist of a single character. Only the last flag in the chain will be assigned a parameter value.
 
 ## Custom Behaviour
 * Flags must have a long form name.
 * Flags may have a short form name.
-* The default value will be used if no value is available from the command line.
+* The default value will be used if no parameter is available on the command line.
 * String flags with no default will be assigned the empty string as it's default.
-* Boolean and Count flags will not consume a command line argument.
+* Boolean and Count flags will not consume a parameter.
 * Short forms for a flag will share all values with it's long form.
 
 Flags (non-boolean) can be assigned a default value.  These flags will take on the default
@@ -107,16 +80,16 @@ a.json false 0
 
 ### String Flags
 * The default value of string flags is a zero-length string unless otherwise specified.
-* String flags that are present and did not consume an argument will be assigned their default value.
-* They consume the next argument if available and use that for their value.
+* String flags that are present and did not consume a parameter will be assigned the default value.
+* They consume the next parameter if available and use that for their value.
 
 ### Boolean Flags
 * The value of boolean flags is true if they are present, otherwise false.
 * Boolean flags do not have default values.
-* They do not consume arguments.
+* They do not consume parameters.
 
 ### Count Flags
 * The value of count flags is the number of times the flag appears.
-* If not defined the default value is 0.
+* If not present the default value is 0.
 * Counting start at the devault value.
-* They do not consume arguments.
+* They do not consume parameters.
