@@ -41,7 +41,7 @@ class Flags {
                 value: option.default
             };
 
-            this[option.long] = flag;
+            this[option.long] = flag;            
             if (option.short) this[option.short] = flag;
         }
 

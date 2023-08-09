@@ -22,5 +22,5 @@ const options = {
     ]
 };
 
-const args = new ParseArgs(options);
-console.log(args);
+const parseArgs = new ParseArgs(options);
+console.log(parseArgs);

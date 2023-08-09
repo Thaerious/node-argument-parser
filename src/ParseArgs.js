@@ -23,7 +23,14 @@ class ParseArgs {
 
         const map = {}
         for (let key in this.flags) {
-            map[key] = this.flags[key].value;
+            if (key === this.flags[key].options.short) {
+                const long = this.flags[key].options.long;
+                map[long] = this.flags[key].value;
+            }
+            else
+            {
+                map[key] = this.flags[key].value;
+            }
         }
         map.$ = this.args;
         
