@@ -3,34 +3,6 @@ import Flags from "./Flags.js";
 const CHAR_FLAG_REGEX = /^-[a-zA-Z0-9]/g;
 const WORD_FLAG_REGEX = /^--[a-zA-Z0-9-_.]+/g;
 
-/**
- * Proxy Handler
- * Returns the raw parse args object for the field '$'.
- * Otherwise, returns the mathcing flag.
- */
-const handler = {
-    get(target, prop, reciever) {
-        if (prop === "$") return target;
-        return target.flags[prop].value;
-    },
-
-    has(target, key) {
-        return key in target.flags;
-    },
-
-    getOwnPropertyDescriptor(target, prop) {
-        return {
-            enumerable: true,
-            configurable: true,
-            writable: false
-        }
-    },
-
-    ownKeys(target) {
-        return Object.keys(target.flags);
-    }
-}
-
 class ParseArgs {
     constructor(options, argv = process.argv) {
         options = {
@@ -48,13 +20,20 @@ class ParseArgs {
         const s2 = this.splitSingles(s1);
         const s3 = this.nameParameters(s2);
         this.args = this.applyValues(s3);
-        return new Proxy(this, handler);
+
+        const map = {}
+        for (let key in this.flags) {
+            map[key] = this.flags[key].value;
+        }
+        map.$ = this.args;
+        
+        return map;
     }
 
     /**
      * Step 1:
      * Create a stack of objects from the arguments array.
-     * Each object contains only the raw command line value.
+     * Each object contains only the raw command line argument.
      */
     createStack(argv) {
         return argv.map(value => ({ raw: value }));
@@ -79,8 +58,8 @@ class ParseArgs {
      * Assign each parameter a name and a type.
      * The type is determined by the number of dashes in front of the parameter.
      * The name is the parameter without dashes.
-     * If it's a single character with a matching long-form, the long-form is used.
-     * Parameters without dashes are not assigned a name.
+     * If it's a single character flag with a matching long-form flag, the long-form is used.
+     * Arguments without dashes (parameters) are not assigned a name.
      * 
      * { 
      *   raw  : string

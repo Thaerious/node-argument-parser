@@ -84,7 +84,7 @@ describe(`default behaviour (no options)`, () => {
             it(`third argument will be '--notaflag'`, () => {
                 const argv = "node . --email who@where.com -- --notaflag".split(/[ ]+/g);
                 const parsed = new ParseArgs(options, argv);
-                assert.strictEqual(parsed.$.args[2], '--notaflag');
+                assert.strictEqual(parsed.$[2], '--notaflag');
             });
         });
     });
@@ -118,7 +118,7 @@ describe(`custom behaviour`, () => {
         it(`third arg will be present (not consumed by flag)`, () => {
             const argv = "node . --has-value ima-arg".split(/[ ]+/g);
             const parsed = new ParseArgs(options, argv);
-            assert.strictEqual(parsed.$.args[2], "ima-arg");
+            assert.strictEqual(parsed.$[2], "ima-arg");
         });
         it(`value will be 'false' when 'boolean' flag not present`, () => {
             const argv = "node . ima-arg".split(/[ ]+/g);

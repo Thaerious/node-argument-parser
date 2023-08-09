@@ -1,4 +1,8 @@
-
+/**
+ * An object that defines how to handle intercepted 'get' operations.
+ * This handler returns the value of the flag when performing a 'get'.
+ * The '4' parameter returns the target object without the handler.
+ */
 const handler = {
     get(target, prop, reciever) {
         if (prop === "$") return target;

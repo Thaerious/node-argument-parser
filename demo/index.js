@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import ParseArgs from "../src/ParseArgs.js";
 
 const options = {    
@@ -22,4 +23,4 @@ const options = {
 };
 
 const args = new ParseArgs(options);
-console.log(args.pack, args.exit, args.verbose);
+console.log(args);

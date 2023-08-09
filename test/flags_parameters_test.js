@@ -39,7 +39,7 @@ describe(`Testing parse args behaviours`, () => {
         it(`boolean flags do not consume arguments`, () => {
             const argv = "node . --do_action value".split(/[ ]+/g);
             const parsed = new ParseArgs(options, argv);
-            assert.strictEqual(parsed.$.args.length, 3);
+            assert.strictEqual(parsed.$.length, 3);
         });        
         it(`boolean flags are true when present in args`, () => {
             const argv = "node . --do_action value".split(/[ ]+/g);

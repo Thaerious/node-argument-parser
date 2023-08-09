@@ -1,5 +1,5 @@
 # Description
-This is a simple no-dependency NodeJS module for parsing command line arguments in CLI programs. It helps you build command line tools by parsing passed in command line flags. Unlike the built-in argument parser, this module does not require the programmer to declare tracked arguments in advance. Additionally, it allows for counting argument occurances.
+This is a simple no-dependency NodeJS module for parsing command line arguments. It helps you build command line tools by parsing command line flags. Unlike the built-in argument parser, this module does not require the programmer to declare tracked arguments in advance. Additionally, it allows for counting argument occurances.
 
 Features:
 * Parses single hyphen (-) and double hyphen (--) arguments.
@@ -14,20 +14,64 @@ npm i @thaerious/parseargs
 ## Default Behaviour
 ```
 import ParseArgs from "../src/ParseArgs.js";
-const args = new ParseArgs()
+const parseArgs = new ParseArgs();
 ```
 
 Command line arguments which are prefixed by a single '-', or double '--' dash are considered 'flags'.  All other arguments are considered 'parameters'.  
 
 * A flag followed immediately by a parameter will be assigned that parameters string value.  
 * A flag with no parameter will be assigned boolean 'true'.
-* Flags not present (unknown) on the command line have the value 'undefined'.
 * Single dash flags consist of a single character and can be chained.
+* The -- flag without text ends parsing.
+* Flag names are case sensitive.
 
 _see /demo/default.js for examples_
 
+### Double Dash Flags
+Flags starting with two dashes take the name of the string after the dashes.  If it is followed by a parameter the flag will be assigned that value, otherwise it is assigned boolean 'true'.
+
 ### Single Dash Flags
 Flags starting with a single dash can be chained.  Single dash flags consist of a single character. Only the last flag in the chain will be assigned a parameter value.
+
+### Example
+``` bash
+$> node demo/default.js --path . --no-copy -abc all
+
+{
+  path: '.',
+  'no-copy': true,
+  a: true,
+  b: true,
+  c: 'all',
+  '$': [
+    '/opt/node/19.3.0/bin/node',
+    '/home/user/parser/demo/default.js'
+  ]
+}
+```
+
+### Escape processing
+All arguments found after a lone '--' are not processed and will be appended to the '$' field.
+``` bash
+$> node demo/default.js --input filename --output -- not_processed
+
+{
+  input: 'filename',
+  output: true,
+  '$': [
+    '/opt/node/19.3.0/bin/node',
+    '/home/user/parser/demo/default.js',
+    'not_processed'
+  ]
+}
+```
+
+
+## The ParseArgs object
+To access a flag's value on the 'ParseArgs' object, treat the flag like a normal POJO value.
+For example to access the alpha flag use: ``parseArgs.alpha`` or ``parseArgs["alpha"]``.
+
+To access the remaining unprocessed arguments use: ``parseArgs.$``.
 
 ## Custom Behaviour
 * Flags must have a long form name.
