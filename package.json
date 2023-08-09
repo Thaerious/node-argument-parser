@@ -11,14 +11,12 @@
     "url": "git+ssh://git@github.com/Thaerious/node-argument-parser.git"
   },
   "keywords": [
-    "argument",
     "parser",
-    "command-line",
-    "CLI",
-    "args",
+    "command-line", "commandline",  "command", "line", "CLI",
     "args-parser",
     "flags",
-    "flag-parser"
+    "flag-parser",
+    "argv", "argc", "args", "arguments" 
   ],
   "type": "module",
   "author": "Ed Armstrong",
