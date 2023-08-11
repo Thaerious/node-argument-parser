@@ -12,5 +12,6 @@ const definitions = {
     ]
 }
 
-const parseArgs = new ParseArgs(definitions);
-console.log(parseArgs);
+console.log(process.stdout);
+// const parseArgs = new ParseArgs(definitions);
+// console.log(parseArgs);
