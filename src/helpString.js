@@ -15,7 +15,7 @@ export default function helpString(options) {
             string += "\t-" + flag.short + ", ";
         }
         string += "--" + flag.long + "\n";
-        string += "\t\t" + (flag.desc.replace(/\n/, "\n\t\t") ?? "[flag.desc]") + "\n\n";
+        string += "\t\t" + (flag.desc?.replace(/\n/, "\n\t\t") ?? "[flag.desc]") + "\n\n";
     }
 
     return string;

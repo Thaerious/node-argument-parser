@@ -12,7 +12,6 @@ const options = {
             short: "p",
             default: "a.json",
             type: "string",
-            desc: "Pack files in tar"
         },
         {
             long: "exit",
