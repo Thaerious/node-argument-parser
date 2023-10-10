@@ -11,9 +11,8 @@ export default function helpString(options) {
     string += "\t" + (options.desc ?? "[options.desc]") + "\n\n";
 
     for (let flag of options.flags) {
-        if (flag.short) {
-            string += "\t-" + flag.short + ", ";
-        }
+        string += "\t";
+        if (flag.short) string += "-" + flag.short + ", ";
         string += "--" + flag.long + "\n";
         string += "\t\t" + (flag.desc?.replace(/\n/, "\n\t\t") ?? "[flag.desc]") + "\n\n";
     }

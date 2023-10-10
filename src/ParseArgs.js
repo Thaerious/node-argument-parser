@@ -21,8 +21,10 @@ class ParseArgs {
         const s3 = this.nameParameters(s2);
         this.args = this.applyValues(s3);
 
+        // Assign values to final result.
         const map = {}
         for (let key in this.flags) {
+            // Copy short value to long.
             if (key === this.flags[key].options.short) {
                 const long = this.flags[key].options.long;
                 map[long] = this.flags[key].value;
@@ -30,6 +32,12 @@ class ParseArgs {
             else
             {
                 map[key] = this.flags[key].value;
+            }
+
+            // Assign to process.env if needed.
+            console.log(this.flags[key]);
+            if (this.flags[key].options.env) {
+                process.env[this.flags[key].options.env] = this.flags[key].value;
             }
         }
         map.$ = this.args;
@@ -148,23 +156,33 @@ class ParseArgs {
                 if (flag.options.type === "string") {
                     flag.value = `${stack[++i].raw}`;
                     flag.rule_applied = 13;
-                } else {
-                    flag.value = stack[++i].raw;
+                }
+                else if (flag.options.type === "number") {
+                    flag.value = Number(`${stack[++i].raw}`);
                     flag.rule_applied = 14;
+                }                
+                else {
+                    flag.value = stack[++i].raw;
+                    flag.rule_applied = 15;
                 }
             }
             else if (flag.options.default) {
                 if (flag.options.type === "string") {
                     flag.value = `${flag.options.default}`;
-                    flag.rule_applied = 15;
-                } else {
-                    flag.value = flag.options.default;
                     flag.rule_applied = 16;
+                }
+                else if (flag.options.type === "number") {
+                    flag.value = Number(`${stack[++i].raw}`);
+                    flag.rule_applied = 17;
+                }                                
+                else {
+                    flag.value = flag.options.default;
+                    flag.rule_applied = 18;
                 }
             }
             else {
                 flag.value = true;
-                flag.rule_applied = 17;
+                flag.rule_applied = 19;
             }
         }
         return returnArgs;

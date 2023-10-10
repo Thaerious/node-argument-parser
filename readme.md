@@ -107,6 +107,7 @@ const definitions = {
 * Boolean and Count flags will not consume a parameter.
 * Short forms for a flag will share all values with it's long form.
 * Flags with a short form will only have the long form name in the resulting object.
+* Flags with an env field will that their value added to process.env in the specified field.
 
 Flags (non-boolean) can be assigned a default value.  These flags will take on the default
 value if none is provided.  Count flags have a default value of 0 if not otherwise specified; they will start counting at their default value.
