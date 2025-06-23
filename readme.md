@@ -206,5 +206,34 @@ $ /index.js -vv
 { verbose : 2 }
 ```
 
+## Generating Help
+
+Descriptions are defined on both the root object and the individual flags.
+
+```json
+{
+    name: "SN-Vacation",
+    short: "SHARCNET Vacation Web App",
+    desc: "Online stand-alone web appliction to co-ordinate vacation requests.",
+    synopsis: "sudo node . [OPTIONS]",
+    flags: [
+        {
+            long: 'verbose',
+            type: 'count',
+            short: 'v',
+            desc: 'Display additional information in the terminal.'
+        }
+    ]
+}
+```
+
+### Help String
+
+```js
+    import helpString from "@thaerious/parseargs/src/helpString.js";
+    logger.console(helpString(options));
+```
+
+```
 ## Notes
 [1] Unprocessed arguments ($) excluded for brevity.

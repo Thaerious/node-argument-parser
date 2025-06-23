@@ -35,8 +35,8 @@ class ParseArgs {
             }
 
             // Assign to process.env if needed.
-            console.log(this.flags[key]);
             if (this.flags[key].options.env) {
+                console.log(this.flags[key]);
                 process.env[this.flags[key].options.env] = this.flags[key].value;
             }
         }
